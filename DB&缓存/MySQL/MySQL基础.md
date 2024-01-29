@@ -231,7 +231,7 @@ select * from students where name is not null and name like "%r%";
 ![分组虚拟表](https://gitee.com/wanglongxin666/pictures/raw/master/img/202401221934550.png)
 
 **dictinct**  
-distinct 会对正航数据去重，所以一般distinct用于单字段的查询，计数等  
+distinct 会对数据去重，所以一般distinct用于单字段的查询，计数等  
 distinct执行时会对查询的记录进行去重，产生一张虚拟的临时表；  
 
 ### 多表联查
@@ -244,6 +244,9 @@ a b c d 全有，涉及的字段补null
 **外连接**  
 左查询：a,b,c均有，a没有的字段补null  
 右查询：b,c,d均有，d没有的字段补null
+
+**内连接**
+b，c有
 
 **子查询**  
 ```sql

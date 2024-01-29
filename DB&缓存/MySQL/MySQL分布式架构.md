@@ -16,9 +16,6 @@
   - [2PC（两阶段提交）的分布式事务实现](#2pc两阶段提交的分布式事务实现)
   - [柔性事务](#柔性事务)
 
-<!-- /code_chunk_output -->
-
-
 # 分布式数据库
 
 分布式数据库本身分为计算层、元数据层和存储层：
@@ -162,7 +159,7 @@ SELECT * FROM orders WHERE o_orderkey = 1
 改进的做法之一是实现一个索引表，表中只包含 o_orderkey 和分片键 o_custkey，如：
 
 ```Sql
-CREATE TABLE idx_orderkey_custkey （ # 实现主键到分片键的映射，这样比如修改主键为1的记录，通过映射关系找到分片键去定位
+CREATE TABLE idx_orderkey_custkey （ # **实现主键到分片键的映射，这样比如修改主键为1的记录，通过映射关系找到分片键去定位**
 
   o_orderkey INT
 

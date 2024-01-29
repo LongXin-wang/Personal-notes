@@ -4,6 +4,8 @@
   - [字典和集合](#字典和集合)
     - [集合](#集合)
     - [字典](#字典)
+  - [字符串](#字符串)
+    - [字符串常用操作](#字符串常用操作)
     - [字符串格式化](#字符串格式化)
 - [函数](#函数)
   - [值传递vs引用传递](#值传递vs引用传递)
@@ -30,6 +32,7 @@
   - [metaclass \& type](#metaclass--type)
     - [type](#type)
     - [metaclass](#metaclass)
+    - [创建类，对象的内部流程](#创建类对象的内部流程)
 - [上下文管理器](#上下文管理器)
   - [基于类实现上下文](#基于类实现上下文)
   - [@contextmanager + 生成器实现上下文](#contextmanager--生成器实现上下文)
@@ -103,7 +106,8 @@ for key in dict.keys ()
 for values in dict.values ()
 
 for item in dict.items ()
-for key,value in dict.items () ```
+for key,value in dict.items () 
+```
 
 ## 字符串
 
@@ -120,6 +124,7 @@ name[1:3]
 ```
 
 **迭代**
+
 ```python
 for ch in strs:
 
@@ -200,7 +205,7 @@ outer: nonlocal
 闭包外部函数返回的是一个函数，而不是一个具体的值。返回的函数通常赋于一个变量，这个变量可以在后面被继续执行调用。
 
 ```python
-ef nth_power(exponent):
+def nth_power(exponent):
     def exponent_of(base):
         return base ** exponent
     return exponent_of # 返回值是exponent_of函数
@@ -284,7 +289,7 @@ type of original_params = <class 'dict'>, original_params = {'symbol': '123456',
 ## 处理异常
 
 - 不要乱用异常， 到底用try 还是 if 要根据实际情况选择
-- try--except (traceback.format_exc()) 这种会z执行except后继续往下执行
+- try--except (traceback.format_exc()) 这种会执行except后继续往下执行
 - try--except （raise） 会在except时raise抛出，不往下执行了
 - if a: raise 则是直接抛出，不往下执行
 
@@ -529,6 +534,8 @@ def main():
 
 ## metaclass & type
 
+![](https://gitee.com/wanglongxin666/pictures/raw/master/img/202403151055516.png)
+
 ### type
 
 type函数语法：type(args1,args2,args3) 其中args1是字符串类型，args2是元组类型，args3是字典类型。
@@ -610,6 +617,7 @@ animal can run
 '''
 ```
 
+
 ### metaclass
 
 - 类的类，元类的实例就是类（不是继承关系），其继承自type，本质是个type（ps:其它定义的类是type类的实例对象）
@@ -669,6 +677,26 @@ class Logging(metaclass=Singleton):
     pass
 
 ```
+
+### 创建类，对象的内部流程
+
+**第一阶段**
+
+*创建类，为此类分配内存空间*
+
+* 编译器执行到class Foo(object)时
+* class Foo 执行，由于metaclass=MyType，所以先执行MyType的__init__方法
+* 先执行从type继承来的__new__实例化出对象，传给了__init__的self
+* MyType的__init__方法调用父类type类的init方法，第一阶段结束
+
+**第二阶段**
+
+* 编译器执行到obj = Foo() 时
+*  Foo是一个类，Foo()调用了MyType类的__call__方法，所以接下来执行MyType类的__call__方法
+*  MyType类的__call__方法调用Foo类（这里就是self）的__new__方法，以及__init__方法
+* 真正创建对象是Foo中的__new__方法调用的object.__new__
+
+![](https://gitee.com/wanglongxin666/pictures/raw/master/img/202403151043137.png)
 
 # 上下文管理器
 
