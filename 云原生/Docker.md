@@ -3,7 +3,9 @@
 - [镜像使用](#镜像使用)
   - [Dockerfile](#dockerfile)
     - [多阶段构建](#多阶段构建)
-  - [镜像实现原理](#镜像实现原理)
+- [镜像实现原理](#镜像实现原理)
+  - [镜像结构](#镜像结构)
+    - [镜像的基础架构](#镜像的基础架构)
 - [容器操作](#容器操作)
   - [容器监控](#容器监控)
 - [资源](#资源)
@@ -95,9 +97,9 @@ WORKDIR /app
 
 ```
 
-## 镜像实现原理
+# 镜像实现原理
 
-镜像是由一系列的镜像层（layer ）组成，每一层代表了镜像构建过程中的一次提交，每一行命构建一层，然后由联合文件系统组起来
+docker镜像的基础是UnionFS（联合文件系统），镜像是由一系列的镜像层（layer ）组成，每一层代表了镜像构建过程中的一次提交，每一行命构建一层，然后由联合文件系统组起来
 
 分层的结构使得 Docker 镜像非常轻量，每一层根据镜像的内容都有一个唯一的 ID 值，当不同的镜像之间有相同的镜像层时，便可以实现不同的镜像之间共享镜像层的效果。
 
@@ -105,9 +107,31 @@ Dockerfile 的每一行命令，都生成了一个镜像层，每一层的 diff 
 
 ![](https://gitee.com/wanglongxin666/pictures/raw/master/img/202401241112107.png)
 
+
+## 镜像结构
+
+Linux 操作系统中的文件管理系统：Linux 文件系统主要由boofts 和 rootfs两部分组成，其中
+
+bootfs：包含 bootloader（引导加载程序）和 kernel（内核）
+
+rootfs：root 文件系统，包含的 Linux系统中的 /dev、/proc、/bin、/etc 等标准目录和文件。
+
+所以，不同的Linux发行版，bootfs基本是一样的，只是 rootfs 不同，如ubuntu、centos等，相当于他们共用一个 bootfs 系统。
+
+Why：Docker中一个 Ubuntu 镜像为什么只有几十兆，而一个 Ubuntu 操作系统的 iso 文件要好几个G？
+
+对于一个精简OS，rootfs可以很小，只需要包含最基本的命令、工具和程序库就可以，因为底层直接用host的kernel，自己只需要提供rootfs就行了，由此可见，对于不同linux发行版，bootfs基本是一致的，rootfs会有差别，因为不同的发行版可以公用bootfs。
+
+### 镜像的基础架构
+
+在Docker底层有个bootfs（boot file system）系统，在bootfs中主要包含 bootloader 和 kernel，bootloader 主要是引导加载kernel，Linux 系统刚启动时会加载 bootfs 文件系统，在Docker 镜像的最底层是引导文件系统 bootfs。这一层与典型得到Linux/Unix 系统一样，包含boot加载器和内核。当 boot加载完成之后整个内核就都在内存中了。
+
+![](https://gitee.com/wanglongxin666/pictures/raw/master/img/202403131725836.png)
+
 # 容器操作
 
 镜像包含了容器运行所需要的文件系统结构和内容，是静态的只读文件，而容器则是在镜像的只读层上创建了可写层，并且容器中的进程属于运行状态，容器是真正的应用载体。
+
 ![](https://gitee.com/wanglongxin666/pictures/raw/master/img/202401241141149.png)
 
 ```Bash
