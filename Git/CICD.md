@@ -22,7 +22,7 @@ CICD的全称是持续集成（Continuous Integration）和持续交付（Contin
 
 ![](https://gitee.com/wanglongxin666/pictures/raw/master/img/202403121631624.png)
 
-逻辑就是...gitlab发送合并请求到CI，CI拉取做一系列处理，然后审批完成能之后走后置命令(docker build,docker push)；
+逻辑就是...gitlab发送合并请求到CI，CI拉取做一系列处理，然后审批完成之后走后置命令(docker build,docker push)；
 
 ![](https://gitee.com/wanglongxin666/pictures/raw/master/img/202403122035578.png)
 
