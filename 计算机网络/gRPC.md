@@ -6,6 +6,10 @@
   - [Server streaming RPC](#server-streaming-rpc)
   - [Client streaming RPC](#client-streaming-rpc)
   - [Bidirectional streaming RPC](#bidirectional-streaming-rpc)
+- [RPC 原理](#rpc-原理)
+  - [远程调用实现](#远程调用实现)
+    - [传递值参数](#传递值参数)
+    - [传递引用参数](#传递引用参数)
 
 # 简述
 
@@ -198,3 +202,27 @@ rpc BidiHello(stream HelloRequest) returns (stream HelloResponse)
 
 ```
 
+# RPC 原理
+
+## 远程调用实现
+
+![](https://gitee.com/wanglongxin666/pictures/raw/master/img/202404291422250.png)
+
+![](https://gitee.com/wanglongxin666/pictures/raw/master/img/202404291415528.png)
+
+### 传递值参数
+
+传递值参数比较简单
+
+### 传递引用参数
+
+RPC中的引用参数，一种常见的做法是将参数的副本发送到远程系统，并在那里使用这些副本进行操作，以避免直接传递引用和指针。这可以通过以下方式实现：
+
+序列化和反序列化：将参数对象序列化为一种可以在网络上传输的格式，然后在远程系统中进行反序列化，以还原成对象的副本。这确保了在远程系统中使用的是独立的副本，而不是原始对象的引用。
+
+无指针表示：对于包含指针的复杂数据结构（比如树和链表），需要将其转换为一种无指针的表示形式，以便在远程系统中进行重建。这可以通过将数据结构展平为可以轻松传输和重建的形式来实现。
+
+远程系统操作：在远程系统中，使用接收到的参数副本进行操作，并在必要时将更新后的对象发送回到调用方，以保持调用方和远程系统中对象的同步。
+
+
+![](https://gitee.com/wanglongxin666/pictures/raw/master/img/202404291423443.png)

@@ -271,6 +271,8 @@ type of original_params = <class 'dict'>, original_params = {'symbol': '123456',
 
 ## 迭代器
 
+可迭代对象是一种具有迭代能力的对象，而迭代器是用来迭代访问可迭代对象中元素的工具。在Python中，可迭代对象实现了 __iter__ 方法，而迭代器实现了 __iter__ 和 __next__ 方法。
+
 而可迭代对象，通过 iter() 函数返回一个迭代器，再通过 next() 函数就可以实现遍历。for in 语句将这个过程隐式化，所以，你只需要知道它大概做了什么就行了。
 
 迭代器（iterator）提供了一个 next 的方法。调用这个方法后，你要么得到这个容器的下一个对象，要么得到一个 StopIteration 的错误。
